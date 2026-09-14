@@ -8,6 +8,7 @@ import { AuraSigil } from '@/components/AuraSigil';
 import { Display, Mono, Panel } from '@/components/ui';
 import { CHAKRA_ORDER, SURFACE_ACCENT } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 
 const ACCENT = SURFACE_ACCENT.sound;
 
@@ -50,7 +51,7 @@ export default function PaywallScreen() {
       <View className="pt-safe-offset-3 flex-row justify-end px-5">
         <Pressable hitSlop={12} onPress={enter} className="flex-row items-center gap-1">
           <Mono>CONTINUE FREE</Mono>
-          <X color="#8a90a6" size={14} />
+          <X color={colors.text.tertiary} size={14} />
         </Pressable>
       </View>
 
@@ -122,7 +123,7 @@ export default function PaywallScreen() {
           style={{ backgroundColor: ACCENT }}
           onPress={subscribed ? enter : onSubscribe}
         >
-          <Text className="font-mono-bold" style={{ fontSize: 13, color: '#0a0e18' }}>
+          <Text className="font-mono-bold" style={{ fontSize: 13, color: colors.surface.deep }}>
             {subscribed ? 'ENTER CHAKRAOS' : 'START MEMBERSHIP · $30/YR'}
           </Text>
         </Pressable>

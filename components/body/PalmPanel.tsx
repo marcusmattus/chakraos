@@ -27,9 +27,10 @@ import {
   type PalmReading,
 } from '@/lib/palm';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey, PalmHand } from '@/lib/types';
 
-const ACCENT = '#36d6e7';
+const ACCENT = colors.accent.cyan;
 
 function tap(style: Haptics.ImpactFeedbackStyle = Haptics.ImpactFeedbackStyle.Light) {
   if (Platform.OS === 'web') return;
@@ -46,9 +47,9 @@ function PhaseHint({ phase }: { phase: PalmPhase }) {
   return (
     <View
       className="absolute top-3 left-3 rounded-md px-2 py-1"
-      style={{ backgroundColor: '#05060acc' }}
+      style={{ backgroundColor: `${colors.surface.sunken}cc` }}
     >
-      <Mono style={{ color: phase === 'locked' ? ACCENT : '#8a90a6' }}>{label}</Mono>
+      <Mono style={{ color: phase === 'locked' ? ACCENT : colors.text.tertiary }}>{label}</Mono>
     </View>
   );
 }
@@ -131,13 +132,7 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
 
   return (
     <View className="px-4">
-      <View className="flex-row items-center justify-between">
-        <View>
-          <Mono className="text-body">PALM FIELD</Mono>
-          <Text className="text-faint mt-1" style={{ fontSize: 11, lineHeight: 16 }}>
-            Nine nodes projected onto your open hand.
-          </Text>
-        </View>
+      <View className="flex-row items-center justify-end">
         <View className="flex-row items-center gap-2">
           <Pressable
             onPress={() => setCompare((c) => !c)}
@@ -145,21 +140,21 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
             style={compare ? { borderColor: `${ACCENT}88`, backgroundColor: `${ACCENT}14` } : null}
             accessibilityRole="button"
           >
-            <GitCompareArrows color={compare ? ACCENT : '#8a90a6'} size={12} />
-            <Mono style={{ color: compare ? ACCENT : '#8a90a6' }}>COMPARE</Mono>
+            <GitCompareArrows color={compare ? ACCENT : colors.text.tertiary} size={12} />
+            <Mono style={{ color: compare ? ACCENT : colors.text.tertiary }}>COMPARE</Mono>
           </Pressable>
           <Pressable
             onPress={phase === 'scanning' ? undefined : phase === 'locked' ? resetScan : startScan}
             className="flex-row items-center gap-1.5 rounded-full px-3 py-2"
-            style={{ backgroundColor: phase === 'scanning' ? '#1e2535' : ACCENT }}
+            style={{ backgroundColor: phase === 'scanning' ? colors.border.muted : ACCENT }}
             accessibilityRole="button"
           >
             {phase === 'locked' ? (
-              <RefreshCw color="#0a0e18" size={12} />
+              <RefreshCw color={colors.surface.deep} size={12} />
             ) : (
-              <ScanLine color={phase === 'scanning' ? '#8a90a6' : '#0a0e18'} size={12} />
+              <ScanLine color={phase === 'scanning' ? colors.text.tertiary : colors.surface.deep} size={12} />
             )}
-            <Mono style={{ color: phase === 'scanning' ? '#8a90a6' : '#0a0e18' }}>
+            <Mono style={{ color: phase === 'scanning' ? colors.text.tertiary : colors.surface.deep }}>
               {phase === 'locked' ? 'RESET' : phase === 'scanning' ? 'SCANNING' : 'SCAN'}
             </Mono>
           </Pressable>
@@ -194,13 +189,13 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
               }}
               className="border-line/80 rounded-full border px-2.5 py-1.5"
               style={{
-                backgroundColor: hand === h ? `${ACCENT}22` : '#0a0e18cc',
-                borderColor: hand === h ? `${ACCENT}88` : '#1e2535',
+                backgroundColor: hand === h ? `${ACCENT}22` : `${colors.surface.deep}cc`,
+                borderColor: hand === h ? `${ACCENT}88` : colors.border.muted,
               }}
               accessibilityRole="button"
               accessibilityLabel={`${h} hand`}
             >
-              <Mono style={{ color: hand === h ? ACCENT : '#8a90a6' }}>
+              <Mono style={{ color: hand === h ? ACCENT : colors.text.tertiary }}>
                 {h === 'left' ? 'L' : 'R'}
               </Mono>
             </Pressable>
@@ -212,11 +207,11 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
                 tap();
               }}
               className="border-line/80 h-8 w-8 items-center justify-center rounded-full border"
-              style={{ backgroundColor: '#0a0e18cc' }}
+              style={{ backgroundColor: `${colors.surface.deep}cc` }}
               accessibilityRole="button"
               accessibilityLabel="Flip camera"
             >
-              <RefreshCw color="#8a90a6" size={12} />
+              <RefreshCw color={colors.text.tertiary} size={12} />
             </Pressable>
           ) : null}
         </View>
@@ -264,13 +259,13 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
         style={{
           backgroundColor: phase === 'locked' ? ACCENT : 'transparent',
           borderWidth: phase === 'locked' ? 0 : 1,
-          borderColor: '#1e2535',
+          borderColor: colors.border.muted,
         }}
         accessibilityRole="button"
       >
         <Text
           className="font-mono-bold"
-          style={{ fontSize: 12, color: phase === 'locked' ? '#0a0e18' : '#8a90a6' }}
+          style={{ fontSize: 12, color: phase === 'locked' ? colors.surface.deep : colors.text.tertiary }}
         >
           {phase === 'locked' ? 'ANALYZE PALM' : 'SCAN TO ANALYZE'}
         </Text>
@@ -312,7 +307,7 @@ export function PalmPanel({ width, active }: { width: number; active: boolean })
               key={p.key}
               onPress={() => openPoint(p.key)}
               className="border-line rounded-xl border px-3 py-2.5"
-              style={{ minWidth: 96, backgroundColor: '#111726' }}
+              style={{ minWidth: 96, backgroundColor: colors.surface.deep }}
               accessibilityRole="button"
             >
               <View className="flex-row items-center gap-1.5">

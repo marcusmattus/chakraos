@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { Lock } from 'lucide-react-native';
 
 import { useReducedMotion } from '@/hooks/useReducedMotion';
+import { colors } from '@/lib/tokens/colors';
 import { cn } from '@/lib/utils';
 
 /** The full chakraOS brand lockup (figure + wordmark + tagline) on its native
@@ -48,7 +49,7 @@ export function Display({
   children,
   className,
   size = 26,
-  color = '#e9ecf5',
+  color = colors.text.primary,
 }: {
   children: ReactNode;
   className?: string;
@@ -99,7 +100,7 @@ export function Panel({ className, style, ...rest }: ViewProps & { className?: s
 /** A mono chip. */
 export function Chip({
   label,
-  color = '#8a90a6',
+  color = colors.text.tertiary,
   filled = false,
 }: {
   label: string;
@@ -196,7 +197,7 @@ export function LockOverlay({
         style={{ backgroundColor: accent }}
         onPress={() => router.push('/paywall')}
       >
-        <Text className="font-mono-bold" style={{ fontSize: 12, color: '#0a0e18' }}>
+        <Text className="font-mono-bold" style={{ fontSize: 12, color: colors.surface.deep }}>
           UNLOCK · $30/YR
         </Text>
       </Pressable>

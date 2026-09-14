@@ -10,7 +10,12 @@ import {
   Inter_700Bold,
   useFonts,
 } from '@expo-google-fonts/inter';
-import { Outfit_500Medium, Outfit_600SemiBold, Outfit_700Bold } from '@expo-google-fonts/outfit';
+import {
+  Outfit_300Light,
+  Outfit_500Medium,
+  Outfit_600SemiBold,
+  Outfit_700Bold,
+} from '@expo-google-fonts/outfit';
 import {
   JetBrainsMono_400Regular,
   JetBrainsMono_500Medium,
@@ -37,6 +42,7 @@ import { loadSkiaWeb } from '@/lib/skia';
 import { useChakraStore } from '@/lib/store';
 import { useCloudHydration } from '@/lib/sync/hydrate';
 import { restoreSession } from '@/lib/supabase';
+import { colors } from '@/lib/tokens/colors';
 
 /**
  * Custom ErrorBoundary that reports React render errors to the parent window (Bilt preview iframe)
@@ -107,7 +113,7 @@ function RootNavigator({ navigatorReady }: { navigatorReady: boolean }) {
 
   return (
     <HeroUINativeProvider>
-      <Stack screenOptions={{ contentStyle: { backgroundColor: '#0a0e18' } }}>
+      <Stack screenOptions={{ contentStyle: { backgroundColor: colors.surface.deep } }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false, animation: 'fade' }} />
         <Stack.Screen name="auth" options={{ headerShown: false, animation: 'fade' }} />
@@ -120,7 +126,16 @@ function RootNavigator({ navigatorReady }: { navigatorReady: boolean }) {
           options={{ presentation: 'modal', headerShown: false }}
         />
         <Stack.Screen name="session" options={{ presentation: 'modal', headerShown: false }} />
-        <Stack.Screen name="mudra/[key]" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="palm-field" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="mudra/index" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen
+          name="mudra/[key]/index"
+          options={{ presentation: 'modal', headerShown: false }}
+        />
+        <Stack.Screen
+          name="mudra/[key]/camera"
+          options={{ presentation: 'modal', headerShown: false }}
+        />
       </Stack>
     </HeroUINativeProvider>
   );
@@ -133,6 +148,7 @@ export default function RootLayout() {
     Inter_500Medium,
     Inter_600SemiBold,
     Inter_700Bold,
+    Outfit_300Light,
     Outfit_500Medium,
     Outfit_600SemiBold,
     Outfit_700Bold,

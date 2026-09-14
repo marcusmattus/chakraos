@@ -1,5 +1,6 @@
 import type { Chakra, ChakraKey, SurfaceKey } from '@/lib/types';
 import { FREQUENCY_REGISTRY, toChakra } from '@/lib/frequency/registry';
+import { colors } from '@/lib/tokens/colors';
 
 /**
  * The nine-node field registry (Soul → Earth).
@@ -26,12 +27,12 @@ export function isChakraKey(v: unknown): v is ChakraKey {
 
 /** Per-surface accent colors (chrome only — session colours come from frequency). */
 export const SURFACE_ACCENT: Record<SurfaceKey, string> = {
-  body: '#36d6e7',
-  journal: '#e8b23d',
-  coach: '#3ddc97',
-  /** Neutral chrome for Sound tab — not a chakra colour (sessions carry their own hue). */
-  sound: '#7ec8e3',
-  you: '#ff5ca8',
+  body: colors.accent.cyan,
+  journal: colors.accent.amber,
+  coach: colors.accent.leaf,
+  /** Sound tab chrome — not a chakra colour (sessions carry their own hue). */
+  sound: colors.accent.violet,
+  you: colors.accent.rose,
 };
 
 /**

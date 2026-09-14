@@ -25,10 +25,11 @@ import {
   signUpWithEmail,
   verifyEmailOtp,
 } from '@/lib/supabase';
+import { colors } from '@/lib/tokens/colors';
 
 const ACCENT = SURFACE_ACCENT.you;
-const INK = '#e9ecf5';
-const MUTE = '#8a90a6';
+const INK = colors.text.primary;
+const MUTE = colors.text.tertiary;
 
 type Mode = 'signup' | 'signin';
 type Step = 'credentials' | 'verify' | 'magic-sent';
@@ -341,7 +342,7 @@ export default function AuthScreen() {
                   value={code}
                   onChangeText={(t) => setCode(t.replace(/\D/g, '').slice(0, 6))}
                   placeholder="······"
-                  placeholderTextColor="#3a4255"
+                  placeholderTextColor={colors.text.ghost}
                   keyboardType="number-pad"
                   maxLength={6}
                   textContentType="oneTimeCode"
@@ -380,7 +381,7 @@ function Field({ label, ...rest }: { label: string } & React.ComponentProps<type
     <View>
       <Mono className="mb-2">{label}</Mono>
       <TextInput
-        placeholderTextColor="#3a4255"
+        placeholderTextColor={colors.text.ghost}
         className="bg-panel border-line text-ink rounded-2xl border px-4 py-3.5"
         style={{ fontFamily: 'Inter_400Regular', fontSize: 15, color: INK }}
         {...rest}
@@ -393,7 +394,7 @@ function ErrorText({ children }: { children: string }) {
   return (
     <Text
       className="mt-4"
-      style={{ color: '#ff6b6b', fontSize: 13, fontFamily: 'Inter_400Regular' }}
+      style={{ color: colors.accent.blood, fontSize: 13, fontFamily: 'Inter_400Regular' }}
     >
       {children}
     </Text>
@@ -417,13 +418,13 @@ function PrimaryButton({
       onPress={onPress}
     >
       {busy ? (
-        <ActivityIndicator color="#0a0e18" size="small" />
+        <ActivityIndicator color={colors.surface.deep} size="small" />
       ) : (
         <>
-          <Text className="font-mono-bold" style={{ fontSize: 13, color: '#0a0e18' }}>
+          <Text className="font-mono-bold" style={{ fontSize: 13, color: colors.surface.deep }}>
             {children}
           </Text>
-          <ArrowRight color="#0a0e18" size={16} />
+          <ArrowRight color={colors.surface.deep} size={16} />
         </>
       )}
     </Pressable>

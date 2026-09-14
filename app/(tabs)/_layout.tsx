@@ -4,6 +4,7 @@ import { Brain, MessageCircle, PenLine, User, Waves } from 'lucide-react-native'
 import { type ComponentType } from 'react';
 
 import { SURFACE_ACCENT } from '@/lib/chakras';
+import { colors } from '@/lib/tokens/colors';
 import type { SurfaceKey } from '@/lib/types';
 
 interface TabDef {
@@ -29,13 +30,13 @@ export default function TabLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          sceneStyle: { backgroundColor: '#0a0e18' },
+          sceneStyle: { backgroundColor: colors.surface.deep },
           tabBarStyle: {
-            backgroundColor: '#0a0e18',
-            borderTopColor: '#1e2535',
+            backgroundColor: colors.surface.deep,
+            borderTopColor: colors.border.muted,
             borderTopWidth: 1,
           },
-          tabBarInactiveTintColor: '#565c72',
+          tabBarInactiveTintColor: colors.text.dim,
           tabBarLabelStyle: {
             fontFamily: 'JetBrainsMono_500Medium',
             fontSize: 9,
@@ -54,7 +55,7 @@ export default function TabLayout() {
                 title: t.label,
                 tabBarActiveTintColor: accent,
                 tabBarIcon: ({ focused, size }) => (
-                  <Icon color={focused ? accent : '#565c72'} size={size ?? 22} />
+                  <Icon color={focused ? accent : colors.text.dim} size={size ?? 22} />
                 ),
               }}
             />

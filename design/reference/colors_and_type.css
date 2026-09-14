@@ -1,0 +1,216 @@
+/* ============================================================
+   ChakraOS — Foundations: Color + Type
+   "Clinical Mysticism" — instrumented reverence for inner state
+   ============================================================ */
+
+/* Fonts via Google CDN (matches blueprint: Outfit / JetBrains Mono / Lora) */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap");
+
+/* Local brand font — SN Pro (variable weight) */
+@font-face {
+  font-family: "SN Pro";
+  src: url("fonts/SNPro-VariableFont_wght.ttf") format("truetype-variations"),
+       url("fonts/SNPro-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* ───────── CANVAS / VOID ───────── */
+  --co-black:        #020408;   /* the void — primary background */
+  --co-deep:         #0A0F1A;   /* glass surfaces, cards */
+  --co-deeper:       #050811;   /* deeper inset wells */
+  --co-rim:          rgba(255,255,255,0.06);   /* 1px hairlines */
+  --co-rim-strong:   rgba(255,255,255,0.12);
+
+  /* ───────── CLINICAL ACCENTS ───────── */
+  --co-accent:       #22D3EE;   /* cyan — primary signal */
+  --co-vein:         #8B5CF6;   /* violet — neural / secondary */
+  --co-leaf:         #4ADE80;   /* emerald — vitality */
+  --co-blood:        #F43F5E;   /* rose — alerts */
+  --co-amber:        #FBBF24;   /* amber — cofactor */
+
+  /* ───────── NINE CHAKRAS ───────── */
+  --ck-earth:        #78350F;   /* below-root, ancestral */
+  --ck-root:         #F43F5E;   /* survival */
+  --ck-sacral:       #FB923C;   /* creativity */
+  --ck-solar:        #FBBF24;   /* identity */
+  --ck-heart:        #4ADE80;   /* love */
+  --ck-throat:       #22D3EE;   /* truth */
+  --ck-third:        #6366F1;   /* intuition */
+  --ck-crown:        #A855F7;   /* unity */
+  --ck-soul:         #E0E7FF;   /* higher-self */
+
+  /* ───────── AURA / EMOTIONAL STATE ───────── */
+  --au-calm:         #67E8F9;
+  --au-excited:      #F472B6;
+  --au-grounded:     #84CC16;
+  --au-diffuse:      #94A3B8;
+
+  /* ───────── NEUTRAL TEXT SCALE ───────── */
+  --fg-1:            #F8FAFC;   /* primary readable */
+  --fg-2:            #CBD5E1;   /* secondary text */
+  --fg-3:            #94A3B8;   /* tertiary, captions */
+  --fg-4:            #64748B;   /* dim, metadata */
+  --fg-5:            #475569;   /* dimmest, ghost */
+  --fg-label:        #64748B;   /* uppercase micro-label */
+
+  /* ───────── SEMANTIC ───────── */
+  --bg-page:         var(--co-black);
+  --bg-glass:        rgba(10,15,26,0.6);
+  --bg-glass-strong: rgba(10,15,26,0.85);
+  --bg-elev-1:       rgba(255,255,255,0.02);
+  --bg-elev-2:       rgba(255,255,255,0.04);
+  --border-1:        var(--co-rim);
+  --border-2:        var(--co-rim-strong);
+
+  /* ───────── TYPE FAMILIES ───────── */
+  --font-display:    "Outfit", system-ui, -apple-system, sans-serif;
+  --font-ui:         "Outfit", system-ui, -apple-system, sans-serif;
+  --font-mono:       "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-journal:    "Lora", "Source Serif 4", Georgia, serif;
+
+  /* ───────── TYPE SIZES (8pt-aligned, mobile-first) ───────── */
+  --t-micro:         10px;   /* the uppercase data-label */
+  --t-xs:            12px;
+  --t-sm:            13px;
+  --t-base:          15px;
+  --t-md:            17px;
+  --t-lg:            20px;
+  --t-xl:            24px;
+  --t-2xl:           32px;
+  --t-3xl:           44px;
+  --t-display:       64px;
+  --t-hero:          88px;
+
+  /* ───────── SPACING ───────── */
+  --sp-1:            4px;
+  --sp-2:            8px;
+  --sp-3:            12px;
+  --sp-4:            16px;
+  --sp-5:            20px;
+  --sp-6:            24px;
+  --sp-8:            32px;
+  --sp-10:           40px;
+  --sp-12:           48px;
+  --sp-16:           64px;
+  --sp-24:           96px;
+
+  /* ───────── RADII ───────── */
+  --r-1:             4px;     /* chips, badges */
+  --r-2:             8px;     /* buttons, inputs */
+  --r-3:             12px;    /* small cards */
+  --r-4:             16px;    /* primary card */
+  --r-5:             20px;    /* large surfaces */
+  --r-6:             28px;    /* drawers, sheets */
+  --r-full:          999px;
+
+  /* ───────── ELEVATION / SHADOW ─────────
+     Two systems:
+     1) Inset hairlines (clinical readout look)
+     2) Outer glows by chakra (mystical / signal) */
+  --sh-hair-in:      inset 0 0 0 1px var(--co-rim);
+  --sh-hair-in-strong: inset 0 0 0 1px var(--co-rim-strong);
+  --sh-1:            0 1px 0 rgba(255,255,255,0.04), 0 8px 24px -8px rgba(0,0,0,0.6);
+  --sh-2:            0 1px 0 rgba(255,255,255,0.05), 0 16px 48px -12px rgba(0,0,0,0.7);
+  --glow-accent:     0 0 0 1px rgba(34,211,238,0.4), 0 0 24px -4px rgba(34,211,238,0.45);
+  --glow-vein:       0 0 0 1px rgba(139,92,246,0.4), 0 0 24px -4px rgba(139,92,246,0.45);
+  --glow-leaf:       0 0 0 1px rgba(74,222,128,0.4), 0 0 24px -4px rgba(74,222,128,0.45);
+  --glow-blood:      0 0 0 1px rgba(244,63,94,0.4), 0 0 24px -4px rgba(244,63,94,0.45);
+
+  /* ───────── MOTION ───────── */
+  --ease-clinical:   cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-instrument: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --dur-breath:      6000ms;
+  --dur-heartbeat:   1000ms;
+  --dur-drift:       10000ms;
+  --dur-fast:        160ms;
+  --dur-base:        280ms;
+  --dur-slow:        520ms;
+
+  /* ───────── GRID / TEXTURE ───────── */
+  --bg-grid: linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px),
+             linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+  --bg-grid-size: 32px 32px;
+  --bg-radial: radial-gradient(1200px 800px at 50% 30%, rgba(34,211,238,0.06), transparent 60%);
+}
+
+/* ───────── BASE ───────── */
+html, body {
+  background: var(--bg-page);
+  color: var(--fg-1);
+  font-family: var(--font-ui);
+  font-size: var(--t-base);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ───────── SEMANTIC TYPE CLASSES ───────── */
+.t-label {
+  font-family: var(--font-ui);
+  font-size: var(--t-micro);
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-label);
+}
+.t-data {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--t-display);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--t-2xl);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--t-xl);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+}
+.t-body {
+  font-family: var(--font-ui);
+  font-size: var(--t-base);
+  font-weight: 400;
+  color: var(--fg-2);
+  line-height: 1.55;
+}
+.t-journal {
+  font-family: var(--font-journal);
+  font-size: var(--t-md);
+  font-weight: 400;
+  font-style: italic;
+  color: var(--fg-1);
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+}
+.t-num {
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.04em;
+}
+
+/* ───────── GLASS PANEL ───────── */
+.glass-panel {
+  background: var(--bg-glass);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+          backdrop-filter: blur(12px) saturate(140%);
+  border: 1px solid var(--border-1);
+  border-radius: var(--r-4);
+}

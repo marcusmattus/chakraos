@@ -4,11 +4,12 @@ import { Text } from 'heroui-native';
 
 import { Mono, Panel } from '@/components/ui';
 import { comparePalmScans } from '@/lib/palm';
+import { colors } from '@/lib/tokens/colors';
 import type { PalmScan } from '@/lib/types';
 
 function DeltaValue({ delta }: { delta: number }) {
   const flat = delta === 0;
-  const color = flat ? '#565c72' : delta > 0 ? '#36f5a6' : '#ff5c6e';
+  const color = flat ? colors.text.dim : delta > 0 ? colors.accent.leaf : colors.accent.blood;
   return (
     <Text className="font-mono-bold" style={{ fontSize: 11, color, width: 42, textAlign: 'right' }}>
       {flat ? '—' : `${delta > 0 ? '+' : '−'}${Math.abs(delta)}`}
@@ -54,7 +55,7 @@ export function PalmCompare({ current, previous }: { current: PalmScan; previous
                     fontSize: 9,
                     letterSpacing: 1,
                     width: 58,
-                    color: summary ? '#c9cfe0' : '#8a90a6',
+                    color: summary ? colors.text.secondary : colors.text.tertiary,
                   }}
                 >
                   {row.label}
@@ -78,7 +79,7 @@ export function PalmCompare({ current, previous }: { current: PalmScan; previous
                     className="absolute top-0 h-full w-0.5"
                     style={{
                       left: `${Math.max(0, Math.min(99, row.previous))}%`,
-                      backgroundColor: '#e9ecf5',
+                      backgroundColor: colors.text.primary,
                       opacity: 0.7,
                     }}
                   />

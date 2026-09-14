@@ -25,6 +25,7 @@ import { formatCheckInContext } from '@/lib/checkin-context';
 import { appendMessage, createConversation, fetchTodayCheckIns, invokeFunction } from '@/lib/db';
 import { hasBackend, supabase } from '@/lib/supabase';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { CoachMessage, Protocol } from '@/lib/types';
 import { coachRespond } from '@/lib/agents/coach';
 import { analyzeEntry } from '@/lib/agents/awareness';
@@ -293,9 +294,9 @@ export default function CoachScreen() {
       ) : null}
 
       <View className="pt-safe px-4">
-        <Mono className="text-coach mt-3">COACH</Mono>
-        <Display size={26} className="mt-1">
-          Reflection in motion
+        <Mono className="text-coach mt-3">AWARENESS · MEMORY · FREQUENCY</Mono>
+        <Display size={28} className="mt-1">
+          Coach
         </Display>
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} className="mt-3">
@@ -308,9 +309,9 @@ export default function CoachScreen() {
                   setConversationId(null);
                 }}
                 className="rounded-full px-3 py-1.5"
-                style={{ backgroundColor: mode === m ? ACCENT : '#141a28' }}
+                style={{ backgroundColor: mode === m ? ACCENT : colors.surface.inset }}
               >
-                <Mono style={{ color: mode === m ? '#0a0e18' : '#8a90a6', fontSize: 10 }}>
+                <Mono style={{ color: mode === m ? colors.surface.deep : colors.text.tertiary, fontSize: 10 }}>
                   {MODE_LABELS[m].toUpperCase()}
                 </Mono>
               </Pressable>
@@ -339,7 +340,7 @@ export default function CoachScreen() {
             onPress={() => void sendMessage('', { regenerate: true })}
             className="flex-row items-center gap-1"
           >
-            <RefreshCw color="#8a90a6" size={14} />
+            <RefreshCw color={colors.text.tertiary} size={14} />
             <Mono>REGENERATE</Mono>
           </Pressable>
           <Pressable
@@ -348,7 +349,7 @@ export default function CoachScreen() {
             onPress={() => void sendMessage('', { continue: true })}
             className="flex-row items-center gap-1"
           >
-            <FastForward color="#8a90a6" size={14} />
+            <FastForward color={colors.text.tertiary} size={14} />
             <Mono>CONTINUE</Mono>
           </Pressable>
           <Pressable
@@ -356,7 +357,7 @@ export default function CoachScreen() {
             onPress={() => router.push('/check-in')}
             className="flex-row items-center gap-1"
           >
-            <PenLine color="#8a90a6" size={14} />
+            <PenLine color={colors.text.tertiary} size={14} />
             <Mono>CHECK-IN</Mono>
           </Pressable>
         </View>
@@ -364,11 +365,11 @@ export default function CoachScreen() {
           <TextInput
             value={text}
             onChangeText={setText}
-            placeholder="What's present for you?"
-            placeholderTextColor="#565c72"
+            placeholder="Ask, or just notice…"
+            placeholderTextColor={colors.text.dim}
             multiline
-            className="bg-panel border-line text-ink max-h-28 flex-1 rounded-2xl border px-4 py-3"
-            style={{ fontFamily: 'Inter_400Regular', fontSize: 15 }}
+            className="bg-panel border-line text-ink max-h-28 flex-1 rounded-full border px-4 py-3"
+            style={{ fontFamily: 'Lora_400Regular_Italic', fontSize: 15 }}
           />
           <Pressable
             onPress={submit}
@@ -376,7 +377,7 @@ export default function CoachScreen() {
             className="mb-1 h-11 w-11 items-center justify-center rounded-full"
             style={{ backgroundColor: ACCENT, opacity: streaming ? 0.5 : 1 }}
           >
-            <Send color="#0a0e18" size={18} />
+            <Send color={colors.surface.deep} size={18} />
           </Pressable>
         </View>
         <View className="mt-2 flex-row gap-3 pb-2">
@@ -409,25 +410,38 @@ function MessageBubble({
   return (
     <View className={isUser ? 'items-end' : 'items-start'}>
       <Panel
-        className="max-w-[92%] px-3 py-2"
-        style={isUser ? { backgroundColor: '#1a2234' } : undefined}
+        className="max-w-[92%] px-3.5 py-3"
+        style={
+          isUser
+            ? {
+                backgroundColor: colors.surface.deep,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                borderBottomRightRadius: 6,
+                borderBottomLeftRadius: 20,
+              }
+            : undefined
+        }
       >
         {isUser ? (
-          <Text className="text-ink" style={{ fontSize: 15, lineHeight: 22 }}>
+          <Text
+            className="text-ink"
+            style={{ fontFamily: 'Lora_400Regular_Italic', fontSize: 15.5, lineHeight: 23 }}
+          >
             {message.content}
           </Text>
         ) : (
           <Markdown
             style={{
-              body: { color: '#e9ecf5', fontSize: 15, lineHeight: 22 },
+              body: { color: colors.text.primary, fontSize: 15, lineHeight: 22 },
               code_inline: {
-                backgroundColor: '#0f1420',
-                color: '#3ddc97',
+                backgroundColor: colors.surface.deep,
+                color: colors.accent.leaf,
                 fontFamily: 'JetBrainsMono_400Regular',
               },
               fence: {
-                backgroundColor: '#0f1420',
-                color: '#c8d0e0',
+                backgroundColor: colors.surface.deep,
+                color: colors.text.secondary,
                 fontFamily: 'JetBrainsMono_400Regular',
                 padding: 8,
                 borderRadius: 8,
@@ -439,22 +453,28 @@ function MessageBubble({
           </Markdown>
         )}
         {message.protocols?.length ? (
-          <View className="mt-2 gap-2">
-            {message.protocols.map((p) => (
-              <Pressable
-                key={p.key}
-                onPress={() => onProtocol(p)}
-                className="border-line rounded-xl border px-3 py-2"
-              >
-                <Mono style={{ color: ACCENT }}>{p.eyebrow}</Mono>
-                <Text className="text-ink mt-1" style={{ fontSize: 14 }}>
-                  {p.title}
-                </Text>
-                <Text className="text-mute" style={{ fontSize: 12 }}>
-                  {p.subtitle}
-                </Text>
-              </Pressable>
-            ))}
+          <View className="mt-3">
+            <Mono>SUGGESTED · TAP TO BEGIN</Mono>
+            <View className="mt-2.5 gap-2">
+              {message.protocols.map((p) => (
+                <Pressable
+                  key={p.key}
+                  onPress={() => onProtocol(p)}
+                  className="bg-panel-2 border-line-2 rounded-2xl border px-3.5 py-3"
+                >
+                  <Mono style={{ color: ACCENT }}>{p.eyebrow}</Mono>
+                  <Text
+                    className="mt-1.5"
+                    style={{ fontFamily: 'Outfit_500Medium', fontSize: 14, color: colors.text.primary }}
+                  >
+                    {p.title}
+                  </Text>
+                  <Text className="text-mute mt-0.5" style={{ fontSize: 12.5 }}>
+                    {p.subtitle}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
           </View>
         ) : null}
       </Panel>

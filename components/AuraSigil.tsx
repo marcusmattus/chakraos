@@ -4,6 +4,7 @@ import { View } from 'react-native';
 
 import { SkiaGate } from '@/components/SkiaGate';
 import { CHAKRA_BY_KEY, CHAKRA_ORDER } from '@/lib/chakras';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraState } from '@/lib/types';
 
 interface AuraSigilProps {
@@ -59,9 +60,9 @@ function AuraSigilCanvas({ states, size }: AuraSigilProps) {
         {/* faint reference rings */}
         <Group opacity={0.25}>
           {/* oxlint-disable-next-line react/style-prop-object -- Skia style prop is a string enum, not RN StyleProp */}
-          <Circle cx={cx} cy={cy} r={maxR} style="stroke" strokeWidth={1} color="#1e2535" />
+          <Circle cx={cx} cy={cy} r={maxR} style="stroke" strokeWidth={1} color={colors.border.muted} />
           {/* oxlint-disable-next-line react/style-prop-object -- Skia style prop is a string enum, not RN StyleProp */}
-          <Circle cx={cx} cy={cy} r={maxR * 0.6} style="stroke" strokeWidth={1} color="#1e2535" />
+          <Circle cx={cx} cy={cy} r={maxR * 0.6} style="stroke" strokeWidth={1} color={colors.border.muted} />
         </Group>
 
         {/* spokes */}
@@ -71,7 +72,7 @@ function AuraSigilCanvas({ states, size }: AuraSigilProps) {
             <Path
               key={`spoke-${pt.key}`}
               path={`M ${cx} ${cy} L ${pt.x} ${pt.y}`}
-              color="#2a3450"
+              color={colors.border.muted}
               style="stroke"
               strokeWidth={1}
             />
@@ -80,9 +81,9 @@ function AuraSigilCanvas({ states, size }: AuraSigilProps) {
         {/* oxlint-enable react/style-prop-object */}
 
         {/* aura polygon */}
-        <Path path={polygon} color="#6b6bff" opacity={0.14} />
+        <Path path={polygon} color={colors.accent.violet} opacity={0.14} />
         {/* oxlint-disable-next-line react/style-prop-object -- Skia style prop is a string enum, not RN StyleProp */}
-        <Path path={polygon} color="#8a90ff" style="stroke" strokeWidth={1.5} opacity={0.5} />
+        <Path path={polygon} color={colors.accent.violet} style="stroke" strokeWidth={1.5} opacity={0.5} />
 
         {/* node points */}
         {points.map((pt) => (
@@ -93,7 +94,7 @@ function AuraSigilCanvas({ states, size }: AuraSigilProps) {
         ))}
 
         {/* center */}
-        <Circle cx={cx} cy={cy} r={3} color="#e9ecf5" opacity={0.6} />
+        <Circle cx={cx} cy={cy} r={3} color={colors.text.primary} opacity={0.6} />
       </Canvas>
     </View>
   );

@@ -5,6 +5,7 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'heroui-native';
 
 import { Mono } from '@/components/ui';
+import { colors } from '@/lib/tokens/colors';
 
 /**
  * The camera layer behind the palm rig. A mirror, nothing more — no frame is
@@ -26,14 +27,14 @@ export function PalmCamera({
     return (
       <View style={StyleSheet.absoluteFill}>
         <CameraView style={StyleSheet.absoluteFill} facing={facing} />
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: '#05060abb' }]} />
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: `${colors.surface.sunken}bb` }]} />
       </View>
     );
   }
 
   return (
     <View style={StyleSheet.absoluteFill}>
-      <LinearGradient colors={['#0d1424', '#0a0e18', '#080b13']} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={[colors.surface.deep, colors.surface.deep, colors.surface.sunken]} style={StyleSheet.absoluteFill} />
       <View className="flex-1 items-center justify-end pb-6">
         <Hand color={`${accent}66`} size={20} />
         <Mono className="mt-2">CAMERA OFF</Mono>

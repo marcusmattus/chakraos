@@ -32,6 +32,7 @@ import { buildPalmOutlinePath } from '@/components/palm/palmPath';
 import { SkiaGate } from '@/components/SkiaGate';
 import { CHAKRA_BY_KEY } from '@/lib/chakras';
 import { palmPointsFor, segmentStrengths, type PalmPoint } from '@/lib/palm';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey, ChakraState, PalmHand } from '@/lib/types';
 
 export type PalmPhase = 'aligning' | 'scanning' | 'locked';
@@ -384,8 +385,8 @@ function PalmRigCanvas({
                         style={{
                           fontSize: 7,
                           letterSpacing: 0.9,
-                          color: '#c9cfe0',
-                          textShadowColor: '#05060a',
+                          color: colors.text.secondary,
+                          textShadowColor: colors.surface.sunken,
                           textShadowRadius: 4,
                         }}
                       >
@@ -396,7 +397,7 @@ function PalmRigCanvas({
                         style={{
                           fontSize: 11,
                           color: n.color,
-                          textShadowColor: '#05060a',
+                          textShadowColor: colors.surface.sunken,
                           textShadowRadius: 4,
                         }}
                       >
@@ -416,7 +417,7 @@ function PalmRigCanvas({
             accessibilityRole="button"
             accessibilityLabel="Recenter palm rig"
             className="border-line/80 absolute right-2 bottom-2 h-9 w-9 items-center justify-center rounded-full border"
-            style={{ backgroundColor: '#0a0e18cc' }}
+            style={{ backgroundColor: `${colors.surface.deep}cc` }}
           >
             <Crosshair color={accent} size={14} />
           </Pressable>

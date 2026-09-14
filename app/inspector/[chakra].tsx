@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { Pressable, ScrollView, View } from 'react-native';
 import { Text } from 'heroui-native';
 
-import { Chip, Display, Mono, Panel } from '@/components/ui';
+import { Chip, Display, Mono, Panel, Voice } from '@/components/ui';
 import { surfacedSignalsFor } from '@/lib/agents/coach';
 import { CHAKRA_BY_KEY, isChakraKey } from '@/lib/chakras';
 import { paletteForKey } from '@/lib/frequency';
@@ -12,6 +12,7 @@ import { FREQUENCY_BY_KEY } from '@/lib/frequency/registry';
 import { MUDRA_BY_CHAKRA, mudraSessionsFor } from '@/lib/mudras';
 import { palmPointsFor } from '@/lib/palm';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey } from '@/lib/types';
 
 export default function InspectorScreen() {
@@ -50,14 +51,17 @@ export default function InspectorScreen() {
         contentContainerStyle={{ paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        <View className="pt-safe-offset-4 px-5">
+        <View className="items-center pt-3">
+          <View className="h-1 w-11 rounded-full" style={{ backgroundColor: colors.border.muted }} />
+        </View>
+        <View className="px-5 pt-3">
           <View className="flex-row items-start justify-between">
             <Mono style={{ color: palette.color }}>
               {def.name.split(' ')[0].toUpperCase()} · {(def.bija || node.bija || '').toUpperCase()}{' '}
               · {node.baseFrequencyHz} HZ · beat {node.beatFrequencyHz}
             </Mono>
             <Pressable onPress={() => router.back()} hitSlop={12}>
-              <X color="#8a90a6" size={20} />
+              <X color={colors.text.tertiary} size={20} />
             </Pressable>
           </View>
 
@@ -71,23 +75,24 @@ export default function InspectorScreen() {
             {node.solfeggioIntent} · {node.brainwaveBand}
           </Text>
 
-          <View className="mt-6 flex-row gap-8">
-            <View>
-              <Mono>ENERGY</Mono>
-              <View className="mt-1 flex-row items-baseline">
-                <Text className="font-mono-bold" style={{ fontSize: 36, color: palette.color }}>
+          <View className="mt-6 flex-row gap-2">
+            <View className="bg-panel-2 border-line-2 flex-1 rounded-2xl border p-3.5">
+              <Mono style={{ fontSize: 9 }}>ENERGY</Mono>
+              <View className="mt-1.5 flex-row items-baseline">
+                <Text className="font-mono-bold" style={{ fontSize: 26, color: palette.color }}>
                   {energy}
                 </Text>
-                <Text className="text-faint font-mono" style={{ fontSize: 13 }}>
-                  /100
+                <Text className="text-faint font-mono" style={{ fontSize: 12 }}>
+                  {' '}
+                  / 100
                 </Text>
               </View>
             </View>
-            <View>
-              <Mono>7D TREND</Mono>
+            <View className="bg-panel-2 border-line-2 flex-1 rounded-2xl border p-3.5">
+              <Mono style={{ fontSize: 9 }}>7D TREND</Mono>
               <Text
-                className="font-mono-bold mt-1"
-                style={{ fontSize: 22, color: trend < 0 ? '#ff5c6e' : '#36f5a6' }}
+                className="font-mono-bold mt-1.5"
+                style={{ fontSize: 26, color: palette.color }}
               >
                 {trend < 0 ? '↓' : '↑'} {Math.abs(trend)}%
               </Text>
@@ -192,32 +197,31 @@ export default function InspectorScreen() {
           </View>
 
           <Mono className="mt-6">SURFACED IN JOURNAL · LAST 7D</Mono>
-          <View className="mt-2 gap-2">
-            {signals.length === 0 ? (
-              <Panel className="p-3">
+          {signals.length === 0 ? (
+            <Panel className="mt-2 p-3">
+              <Text className="text-faint" style={{ fontFamily: 'Inter_400Regular', fontSize: 12 }}>
+                Nothing surfaced yet. Journaling teaches this node what to listen for.
+              </Text>
+            </Panel>
+          ) : (
+            signals.map((sig, i) => (
+              <View
+                key={sig.phrase}
+                className="border-line mt-3 flex-row items-baseline justify-between pb-3"
+                style={i < signals.length - 1 ? { borderBottomWidth: 1 } : undefined}
+              >
+                <Voice size={15} className="flex-1">
+                  {`"${sig.phrase}"`}
+                </Voice>
                 <Text
-                  className="text-faint"
-                  style={{ fontFamily: 'Inter_400Regular', fontSize: 12 }}
+                  className="font-mono ml-2"
+                  style={{ fontSize: 11, color: palette.color }}
                 >
-                  Nothing surfaced yet. Journaling teaches this node what to listen for.
+                  ×{sig.count}
                 </Text>
-              </Panel>
-            ) : (
-              signals.map((sig) => (
-                <Panel key={sig.phrase} className="flex-row items-center justify-between p-3">
-                  <Text
-                    className="text-ink flex-1"
-                    style={{ fontFamily: 'Inter_400Regular', fontSize: 13 }}
-                  >
-                    {sig.phrase}
-                  </Text>
-                  <Text className="font-mono" style={{ fontSize: 12, color: palette.color }}>
-                    ×{sig.count}
-                  </Text>
-                </Panel>
-              ))
-            )}
-          </View>
+              </View>
+            ))
+          )}
 
           <View className="mt-7 gap-3">
             <Pressable
@@ -227,8 +231,8 @@ export default function InspectorScreen() {
                 router.replace({ pathname: '/session', params: { chakra: key } });
               }}
             >
-              <Play color="#0a0e18" size={14} fill="#0a0e18" />
-              <Text className="font-mono-bold" style={{ fontSize: 12, color: '#0a0e18' }}>
+              <Play color={colors.surface.deep} size={14} fill={colors.surface.deep} />
+              <Text className="font-mono-bold" style={{ fontSize: 12, color: colors.surface.deep }}>
                 BEGIN {node.baseFrequencyHz} HZ SESSION
               </Text>
             </Pressable>
@@ -253,13 +257,17 @@ export default function InspectorScreen() {
                   router.navigate({ pathname: '/(tabs)/journal', params: { seed: key } });
                 }}
               >
-                <PenLine color="#e9ecf5" size={14} />
-                <Text className="font-mono" style={{ fontSize: 12, color: '#e9ecf5' }}>
+                <PenLine color={colors.text.primary} size={14} />
+                <Text className="font-mono" style={{ fontSize: 12, color: colors.text.primary }}>
                   REFLECT
                 </Text>
               </Pressable>
             </View>
           </View>
+
+          <Voice size={13} className="text-faint mt-5 text-center">
+            A visual map, not a measurement.
+          </Voice>
         </View>
       </ScrollView>
     </View>

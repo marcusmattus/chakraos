@@ -1,10 +1,8 @@
 import { useRouter } from 'expo-router';
-import { Sparkles } from 'lucide-react-native';
 import { useMemo } from 'react';
 import { Pressable, View } from 'react-native';
 import { Text } from 'heroui-native';
 
-import { AuraSigil } from '@/components/AuraSigil';
 import { BodyField } from '@/components/BodyField';
 import { Chip, Mono, Panel, SoftFade } from '@/components/ui';
 import { todaysObservation } from '@/lib/agents/oracle';
@@ -39,13 +37,10 @@ export function FieldPanel({ width }: { width: number }) {
       <View className="mt-2 px-4">
         <SoftFade>
           <Panel className="p-4">
-            <View className="flex-row items-center gap-2">
-              <Sparkles color={SURFACE_ACCENT.body} size={14} />
-              <Mono className="text-body">TODAY&apos;S OBSERVATION</Mono>
-            </View>
+            <Mono className="text-mute">TODAY&apos;S OBSERVATION</Mono>
             <Text
               className="text-ink mt-2"
-              style={{ fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 21 }}
+              style={{ fontFamily: 'Inter_400Regular', fontSize: 14, lineHeight: 20 }}
             >
               {observation.text}
             </Text>
@@ -63,11 +58,21 @@ export function FieldPanel({ width }: { width: number }) {
         </SoftFade>
       </View>
 
-      <View className="mt-4 px-4">
-        <Mono className="mb-2">THE FIELD AS CONSTELLATION</Mono>
-        <Panel className="items-center py-4">
-          <AuraSigil states={states} size={Math.min(width, 280)} />
-        </Panel>
+      <View className="mt-3 flex-row gap-2 px-4">
+        <Pressable
+          onPress={() => router.push('/mudra')}
+          className="bg-panel-2 border-line flex-1 items-center rounded-2xl border py-3"
+          accessibilityRole="button"
+        >
+          <Mono>MUDRA</Mono>
+        </Pressable>
+        <Pressable
+          onPress={() => router.push('/palm-field')}
+          className="bg-panel-2 border-line flex-1 items-center rounded-2xl border py-3"
+          accessibilityRole="button"
+        >
+          <Mono>BODY PALM</Mono>
+        </Pressable>
       </View>
     </View>
   );

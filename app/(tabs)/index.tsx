@@ -1,36 +1,19 @@
-import { useIsFocused } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
 import { Pressable, ScrollView, useWindowDimensions, View } from 'react-native';
 import { Text } from 'heroui-native';
 
 import { FieldPanel } from '@/components/body/FieldPanel';
-import { MudraPanel } from '@/components/body/MudraPanel';
-import { PalmPanel } from '@/components/body/PalmPanel';
 import { Mono } from '@/components/ui';
 import { SURFACE_ACCENT } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 
-type BodyView = 'field' | 'palm' | 'mudras';
-
-const VIEWS: { key: BodyView; label: string }[] = [
-  { key: 'field', label: 'FIELD' },
-  { key: 'palm', label: 'PALM' },
-  { key: 'mudras', label: 'MUDRAS' },
-];
-
-/**
- * Body — the physical visualisation hub.
- * Field: the full-body nine-node channel. Palm: the camera palm chakra map.
- * Mudras: the camera hand-position practice.
- */
+/** Body — the nine-node field, the default home surface. */
 export default function BodyScreen() {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const isFocused = useIsFocused();
   const fieldIndex = useChakraStore((s) => s.fieldIndex);
-  const [view, setView] = useState<BodyView>('field');
 
   const contentWidth = Math.min(width - 32, 360);
 
@@ -46,7 +29,7 @@ export default function BodyScreen() {
             <Mono>TODAY · {format(new Date(), 'EEE').toUpperCase()}</Mono>
             <Text
               className="mt-1"
-              style={{ fontFamily: 'Outfit_600SemiBold', fontSize: 28, color: '#e9ecf5' }}
+              style={{ fontFamily: 'Outfit_600SemiBold', fontSize: 28, color: colors.text.primary }}
             >
               {format(new Date(), 'd MMM').toLowerCase()}
             </Text>
@@ -58,7 +41,7 @@ export default function BodyScreen() {
               style={{ backgroundColor: SURFACE_ACCENT.body }}
               accessibilityRole="button"
             >
-              <Mono style={{ color: '#0a0e18' }}>CHECK-IN</Mono>
+              <Mono style={{ color: colors.surface.deep }}>CHECK-IN</Mono>
             </Pressable>
             <View className="items-end">
               <Mono>FIELD INDEX</Mono>
@@ -76,32 +59,10 @@ export default function BodyScreen() {
             </View>
           </View>
         </View>
-
-        <View className="border-line mt-4 flex-row rounded-full border p-1">
-          {VIEWS.map((v) => {
-            const on = view === v.key;
-            return (
-              <Pressable
-                key={v.key}
-                onPress={() => setView(v.key)}
-                className="flex-1 items-center rounded-full py-2"
-                style={{ backgroundColor: on ? `${SURFACE_ACCENT.body}1f` : 'transparent' }}
-                accessibilityRole="button"
-                accessibilityState={{ selected: on }}
-              >
-                <Mono style={{ color: on ? SURFACE_ACCENT.body : '#565c72' }}>{v.label}</Mono>
-              </Pressable>
-            );
-          })}
-        </View>
       </View>
 
       <View className="mt-4">
-        {view === 'field' ? <FieldPanel width={contentWidth} /> : null}
-        {view === 'palm' ? (
-          <PalmPanel width={Math.min(width - 32, 420)} active={isFocused} />
-        ) : null}
-        {view === 'mudras' ? <MudraPanel /> : null}
+        <FieldPanel width={contentWidth} />
       </View>
     </ScrollView>
   );
