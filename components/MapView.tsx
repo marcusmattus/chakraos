@@ -289,7 +289,7 @@ export default function MapView({
         showsTraffic={showsTraffic}
         showsBuildings={showsBuildings}
         showsIndoors={showsIndoors}
-        showsPointsOfInterest={showsPointsOfInterest}
+        showsPointsOfInterests={showsPointsOfInterest}
         showsUserLocation={showsUserLocation}
         followsUserLocation={followsUserLocation}
         scrollEnabled={scrollEnabled}

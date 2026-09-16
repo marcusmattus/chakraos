@@ -3,7 +3,6 @@
     "name": "Aura Field",
     "slug": "chakraos",
     "owner": "chakraos",
-    "newArchEnabled": true,
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
