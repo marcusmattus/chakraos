@@ -18,6 +18,7 @@ import { CHAKRA_BY_KEY, isChakraKey, SURFACE_ACCENT } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
 import { colors } from '@/lib/tokens/colors';
 import type { JournalEntry } from '@/lib/types';
+import { VIRTUE_BY_KEY } from '@/lib/virtues';
 
 const ACCENT = SURFACE_ACCENT.journal;
 
@@ -38,6 +39,11 @@ export default function JournalScreen() {
   const inputRef = useRef<TextInput>(null);
   const rawSeed = params.seed;
   const seeded = isChakraKey(rawSeed) ? rawSeed : undefined;
+  const rawPrompt = params.prompt;
+  const prompt = typeof rawPrompt === 'string' ? rawPrompt : undefined;
+  const rawVirtue = params.virtue;
+  const virtueKey = typeof rawVirtue === 'string' ? rawVirtue : undefined;
+  const virtue = virtueKey ? VIRTUE_BY_KEY[virtueKey] : undefined;
 
   const recorder = useVoiceRecorder();
   const [voiceNote, setVoiceNote] = useState<{ uri: string; durationS: number } | null>(null);
@@ -112,13 +118,23 @@ export default function JournalScreen() {
               />
             </View>
           ) : null}
+          {virtue ? (
+            <View className="mt-3">
+              <Chip label={`Reflecting on ${virtue.name}`} color="#c9a75c" filled />
+            </View>
+          ) : null}
+          {prompt ? (
+            <Voice className="mt-3" size={15}>
+              {prompt}
+            </Voice>
+          ) : null}
 
           <Panel className="mt-4 p-4">
             <TextInput
               ref={inputRef}
               value={text}
               onChangeText={setText}
-              placeholder="What are you noticing right now?"
+              placeholder={prompt ?? 'What are you noticing right now?'}
               placeholderTextColor={colors.text.dim}
               multiline
               className="text-ink"

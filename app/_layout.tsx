@@ -136,6 +136,18 @@ function RootNavigator({ navigatorReady }: { navigatorReady: boolean }) {
           name="mudra/[key]/camera"
           options={{ presentation: 'modal', headerShown: false }}
         />
+        <Stack.Screen name="mudra/[key]" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="mudras/index" options={{ headerShown: false }} />
+        <Stack.Screen name="mudras/[mudra]" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="mudras/camera" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="mudras/compare" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="virtues/index" options={{ headerShown: false }} />
+        <Stack.Screen name="virtues/[virtue]" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="settings" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="privacy" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="goals/index" options={{ headerShown: false }} />
+        <Stack.Screen name="goals/[goal]" options={{ presentation: 'modal', headerShown: false }} />
+        <Stack.Screen name="reviews/index" options={{ headerShown: false }} />
       </Stack>
     </HeroUINativeProvider>
   );
