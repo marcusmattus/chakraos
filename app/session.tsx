@@ -1,18 +1,19 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import { ChevronDown, Pause, Play, SkipBack, SkipForward } from 'lucide-react-native';
+import { ChevronDown, Pause, Play, SkipBack, SkipForward, X } from 'lucide-react-native';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { Text } from 'heroui-native';
 
 import { SessionAtmosphereView } from '@/components/SessionAtmosphere';
 import { SoundVisualizer } from '@/components/SoundVisualizer';
-import { Chip, Display, Mono } from '@/components/ui';
+import { Chip, Display, Mono, Voice } from '@/components/ui';
 import { useToneSession } from '@/hooks/useToneSession';
 import { sessionForChakra } from '@/lib/agents/coach';
-import { CHAKRA_BY_KEY, isChakraKey } from '@/lib/chakras';
+import { CHAKRA_BY_KEY, CHAKRA_ORDER, isChakraKey } from '@/lib/chakras';
 import { atmosphereForKey } from '@/lib/frequency/atmosphere';
-import { FREQUENCY_BY_KEY } from '@/lib/frequency/registry';
+import { buildSoundLibrarySessions, FREQUENCY_BY_KEY } from '@/lib/frequency/registry';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey } from '@/lib/types';
 
 function fmt(s: number): string {
@@ -21,23 +22,136 @@ function fmt(s: number): string {
   return `${m}:${sec.toString().padStart(2, '0')}`;
 }
 
-export default function SessionScreen() {
+const BREATH_PHASE_S = 4;
+const BREATH_CYCLES = 5;
+const BREATH_TOTAL_S = BREATH_PHASE_S * 4 * BREATH_CYCLES;
+const BREATH_PHASES = ['INHALE', 'HOLD', 'EXHALE', 'HOLD'] as const;
+
+/**
+ * Box-breathing timer (4-4-4-4). Deterministic phase cycling only — no audio,
+ * no visualizer; the countdown itself is the practice.
+ */
+function BreathworkTimerScreen({ chakraKey }: { chakraKey: ChakraKey }) {
+  const router = useRouter();
+  const node = FREQUENCY_BY_KEY[chakraKey];
+  const completeSession = useChakraStore((s) => s.completeSession);
+  const [elapsed, setElapsed] = useState(0);
+  const completedRef = useRef(false);
+  const accent = colors.accent.leaf;
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setElapsed((e) => {
+        const next = e + 1;
+        if (next >= BREATH_TOTAL_S && !completedRef.current) {
+          completedRef.current = true;
+          completeSession({
+            sessionKey: `breath:${chakraKey}`,
+            chakra: chakraKey,
+            hz: node.baseFrequencyHz,
+            durationS: BREATH_TOTAL_S,
+            beatHz: node.beatFrequencyHz,
+            brainwaveBand: node.brainwaveBand,
+          });
+        }
+        return Math.min(next, BREATH_TOTAL_S);
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [completeSession, chakraKey, node.baseFrequencyHz, node.beatFrequencyHz, node.brainwaveBand]);
+
+  const cycleLenS = BREATH_PHASE_S * 4;
+  const cycleIndex = Math.min(Math.floor(elapsed / cycleLenS), BREATH_CYCLES - 1);
+  const phaseIndex = Math.floor((elapsed % cycleLenS) / BREATH_PHASE_S);
+  const phaseName = BREATH_PHASES[phaseIndex];
+  const secondsLeftInPhase = BREATH_PHASE_S - (elapsed % BREATH_PHASE_S);
+  const remaining = BREATH_TOTAL_S - elapsed;
+  const done = elapsed >= BREATH_TOTAL_S;
+
+  const end = () => {
+    if (router.canGoBack()) router.back();
+    else router.replace('/(tabs)');
+  };
+
+  return (
+    <View className="flex-1 items-center justify-center" style={{ backgroundColor: colors.surface.deep }}>
+      <View className="pt-safe-offset-4 absolute top-0 right-0 left-0 flex-row items-center justify-between px-5">
+        <Mono style={{ letterSpacing: 3 }}>
+          CYCLE {String(cycleIndex + 1).padStart(2, '0')} OF {String(BREATH_CYCLES).padStart(2, '0')}
+        </Mono>
+        <Pressable onPress={end} className="flex-row items-center gap-1.5" hitSlop={12}>
+          <X color={colors.text.dim} size={13} />
+          <Mono>END</Mono>
+        </Pressable>
+      </View>
+
+      <View className="items-center justify-center" style={{ width: 300, height: 300 }}>
+        <View
+          className="absolute rounded-full"
+          style={{ width: 260, height: 260, borderWidth: 1, borderColor: `${accent}66` }}
+        />
+        <View
+          className="absolute rounded-full"
+          style={{ width: 180, height: 180, borderWidth: 1, borderColor: `${accent}2e` }}
+        />
+        <View className="items-center">
+          <Mono style={{ color: accent, letterSpacing: 5 }}>{done ? 'COMPLETE' : phaseName}</Mono>
+          <Text
+            className="mt-2"
+            style={{ fontFamily: 'Outfit_300Light', fontSize: 76, lineHeight: 76, color: colors.text.primary }}
+          >
+            {done ? '—' : secondsLeftInPhase}
+          </Text>
+          <Mono size={9.5} style={{ marginTop: 4, letterSpacing: 3 }}>
+            SECONDS
+          </Mono>
+        </View>
+      </View>
+
+      <Voice size={17} className="text-mute mt-6">
+        Box Breathing · 4-4-4-4
+      </Voice>
+
+      <View className="mt-6 flex-row gap-2.5">
+        {Array.from({ length: BREATH_CYCLES }).map((_, i) => (
+          <View
+            key={`cycle-dot-${i}`}
+            className="rounded-full"
+            style={{
+              width: 7,
+              height: 7,
+              backgroundColor: i <= cycleIndex ? accent : colors.border.muted,
+            }}
+          />
+        ))}
+      </View>
+
+      <Mono className="mt-7" style={{ letterSpacing: 3 }}>
+        {done ? 'COMPLETE' : `${fmt(remaining)} REMAINING`}
+      </Mono>
+    </View>
+  );
+}
+
+function SoundPlayerScreen({ chakraKey }: { chakraKey: ChakraKey }) {
   const router = useRouter();
   const { width } = useWindowDimensions();
-  const { chakra, mode } = useLocalSearchParams<{ chakra: ChakraKey; mode?: string }>();
-  const key: ChakraKey = isChakraKey(chakra) ? chakra : 'third';
-  const def = CHAKRA_BY_KEY[key];
-  const node = FREQUENCY_BY_KEY[key];
-  const atmosphere = useMemo(() => atmosphereForKey(key), [key]);
+  const def = CHAKRA_BY_KEY[chakraKey];
+  const node = FREQUENCY_BY_KEY[chakraKey];
+  const atmosphere = useMemo(() => atmosphereForKey(chakraKey), [chakraKey]);
   const accent = atmosphere.control;
   const label = atmosphere.label;
-  const isBreath = mode === 'breath';
   const minimal = atmosphere.uiMode === 'minimal';
 
   const completeSession = useChakraStore((s) => s.completeSession);
+  const session = sessionForChakra(chakraKey);
+  const totalS = 90;
 
-  const session = sessionForChakra(key);
-  const totalS = isBreath ? 60 : 90;
+  const upNext = useMemo(() => {
+    const library = buildSoundLibrarySessions();
+    const idx = CHAKRA_ORDER.indexOf(chakraKey);
+    return [1, 2].map((offset) => library[(idx + offset) % CHAKRA_ORDER.length]);
+  }, [chakraKey]);
 
   const [elapsed, setElapsed] = useState(0);
   const [playing, setPlaying] = useState(true);
@@ -47,7 +161,7 @@ export default function SessionScreen() {
     carrierHz: node.baseFrequencyHz,
     beatHz: node.beatFrequencyHz,
     band: `${node.brainwaveBand} ${node.beatFrequencyHz} Hz`,
-    playing: playing && !isBreath,
+    playing,
   });
 
   useEffect(() => {
@@ -59,7 +173,7 @@ export default function SessionScreen() {
           completedRef.current = true;
           completeSession({
             sessionKey: session.key,
-            chakra: key,
+            chakra: chakraKey,
             hz: node.baseFrequencyHz,
             durationS: session.durationS,
             beatHz: node.beatFrequencyHz,
@@ -76,7 +190,7 @@ export default function SessionScreen() {
     completeSession,
     session.key,
     session.durationS,
-    key,
+    chakraKey,
     node.baseFrequencyHz,
     node.beatFrequencyHz,
     node.brainwaveBand,
@@ -94,15 +208,11 @@ export default function SessionScreen() {
         <View className="flex-row items-center justify-between">
           <View>
             <Mono style={{ color: accent }}>
-              {minimal
-                ? `${node.baseFrequencyHz} HZ`
-                : isBreath
-                  ? 'BREATHWORK · 4-4-4-4'
-                  : 'NOW PLAYING · SESSION'}
+              {minimal ? `${node.baseFrequencyHz} HZ` : 'NOW PLAYING · SESSION'}
             </Mono>
             {!minimal ? (
               <Display size={22} className="mt-1" color={label}>
-                {isBreath ? `${def.name} Breath` : session.title}
+                {session.title}
               </Display>
             ) : (
               <Display size={28} className="mt-2" color={label}>
@@ -134,8 +244,10 @@ export default function SessionScreen() {
             <Text className="mt-1 font-mono" style={{ fontSize: 12, color: label, opacity: 0.7 }}>
               {def.name.toLowerCase()} · {node.brainwaveBand} · beat {node.beatFrequencyHz} Hz
             </Text>
-            <View className="mt-3 flex-row gap-2">
-              <Chip label={node.solfeggioIntent.split(',')[0]} color={accent} />
+            <View className="mt-3 flex-row flex-wrap justify-center gap-2">
+              {session.tags.map((tag) => (
+                <Chip key={tag} label={tag} color={accent} />
+              ))}
             </View>
           </>
         ) : (
@@ -201,7 +313,7 @@ export default function SessionScreen() {
                   completedRef.current = true;
                   completeSession({
                     sessionKey: session.key,
-                    chakra: key,
+                    chakra: chakraKey,
                     hz: node.baseFrequencyHz,
                     durationS: session.durationS,
                     beatHz: node.beatFrequencyHz,
@@ -216,7 +328,35 @@ export default function SessionScreen() {
             <View style={{ width: 22 }} />
           )}
         </View>
+
+        {upNext.length > 0 ? (
+          <View className="mt-6 border-t pt-4" style={{ borderColor: 'rgba(255,255,255,0.08)' }}>
+            <Mono style={{ color: label, opacity: 0.55 }}>UP NEXT</Mono>
+            {upNext.map((s) => (
+              <Pressable
+                key={s.key}
+                onPress={() => router.replace({ pathname: '/session', params: { chakra: s.chakra } })}
+                className="mt-2.5 flex-row items-baseline justify-between"
+              >
+                <Text style={{ fontFamily: 'Outfit_500Medium', fontSize: 13.5, color: label }}>
+                  {CHAKRA_BY_KEY[s.chakra].name}
+                </Text>
+                <Mono style={{ color: label, opacity: 0.55 }}>
+                  {s.hz} HZ · {Math.round(s.durationS / 60)} MIN
+                </Mono>
+              </Pressable>
+            ))}
+          </View>
+        ) : null}
       </View>
     </View>
   );
+}
+
+export default function SessionScreen() {
+  const { chakra, mode } = useLocalSearchParams<{ chakra: ChakraKey; mode?: string }>();
+  const key: ChakraKey = isChakraKey(chakra) ? chakra : 'third';
+
+  if (mode === 'breath') return <BreathworkTimerScreen chakraKey={key} />;
+  return <SoundPlayerScreen chakraKey={key} />;
 }

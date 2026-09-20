@@ -10,6 +10,7 @@ import { suggestSession } from '@/lib/agents/coach';
 import { SURFACE_ACCENT } from '@/lib/chakras';
 import { buildSoundLibrarySessions, paletteForKey } from '@/lib/frequency';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 
 const ACCENT = SURFACE_ACCENT.sound;
 
@@ -72,8 +73,8 @@ export default function SoundScreen() {
                 router.push({ pathname: '/session', params: { chakra: suggested.chakra } })
               }
             >
-              <Play color="#0a0e18" size={15} fill="#0a0e18" />
-              <Text className="font-mono-bold" style={{ fontSize: 12, color: '#0a0e18' }}>
+              <Play color={colors.surface.deep} size={15} fill={colors.surface.deep} />
+              <Text className="font-mono-bold" style={{ fontSize: 12, color: colors.surface.deep }}>
                 BEGIN SESSION
               </Text>
             </Pressable>

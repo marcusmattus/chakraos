@@ -6,6 +6,7 @@ import { Text } from 'heroui-native';
 import { Mono } from '@/components/ui';
 import { supabase } from '@/lib/supabase';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 
 /**
  * Deep-link landing for magic link / OAuth (`aura-field://auth/callback`).
@@ -41,7 +42,7 @@ export default function AuthCallbackScreen() {
 
   return (
     <View className="bg-field flex-1 items-center justify-center gap-3">
-      <ActivityIndicator color="#36d6e7" />
+      <ActivityIndicator color={colors.accent.cyan} />
       <Mono>COMPLETING SIGN-IN…</Mono>
       <Text className="text-mute" style={{ fontSize: 13 }}>
         One moment.

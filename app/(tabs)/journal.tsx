@@ -16,6 +16,7 @@ import { Chip, Display, FadeIn, Mono, Panel, Voice } from '@/components/ui';
 import { useVoiceRecorder } from '@/hooks/useVoiceRecorder';
 import { CHAKRA_BY_KEY, isChakraKey, SURFACE_ACCENT } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { JournalEntry } from '@/lib/types';
 import { VIRTUE_BY_KEY } from '@/lib/virtues';
 
@@ -134,7 +135,7 @@ export default function JournalScreen() {
               value={text}
               onChangeText={setText}
               placeholder={prompt ?? 'What are you noticing right now?'}
-              placeholderTextColor="#565c72"
+              placeholderTextColor={colors.text.dim}
               multiline
               className="text-ink"
               style={{
@@ -150,23 +151,23 @@ export default function JournalScreen() {
                   <View
                     className="rounded-md border px-3 py-1.5"
                     style={{
-                      borderColor: voiceMode ? '#1e2535' : ACCENT,
+                      borderColor: voiceMode ? colors.border.muted : ACCENT,
                       backgroundColor: voiceMode ? 'transparent' : `${ACCENT}22`,
                     }}
                   >
-                    <Mono style={{ color: voiceMode ? '#8a90a6' : ACCENT }}>TEXT</Mono>
+                    <Mono style={{ color: voiceMode ? colors.text.tertiary : ACCENT }}>TEXT</Mono>
                   </View>
                 </Pressable>
                 <Pressable onPress={() => switchMode(true)}>
                   <View
                     className="flex-row items-center gap-1.5 rounded-md border px-3 py-1.5"
                     style={{
-                      borderColor: voiceMode ? ACCENT : '#1e2535',
+                      borderColor: voiceMode ? ACCENT : colors.border.muted,
                       backgroundColor: voiceMode ? `${ACCENT}22` : 'transparent',
                     }}
                   >
-                    <Mic color={voiceMode ? ACCENT : '#8a90a6'} size={11} />
-                    <Mono style={{ color: voiceMode ? ACCENT : '#8a90a6' }}>VOICE</Mono>
+                    <Mic color={voiceMode ? ACCENT : colors.text.tertiary} size={11} />
+                    <Mono style={{ color: voiceMode ? ACCENT : colors.text.tertiary }}>VOICE</Mono>
                   </View>
                 </Pressable>
               </View>
@@ -174,9 +175,9 @@ export default function JournalScreen() {
                 onPress={submit}
                 disabled={!canSubmit}
                 className="h-9 w-9 items-center justify-center rounded-full"
-                style={{ backgroundColor: canSubmit ? ACCENT : '#1e2535' }}
+                style={{ backgroundColor: canSubmit ? ACCENT : colors.border.muted }}
               >
-                <Send color={canSubmit ? '#0a0e18' : '#565c72'} size={15} />
+                <Send color={canSubmit ? colors.surface.deep : colors.text.dim} size={15} />
               </Pressable>
             </View>
             {voiceMode ? (
@@ -186,19 +187,19 @@ export default function JournalScreen() {
                     onPress={toggleRecord}
                     className="h-10 w-10 items-center justify-center rounded-full border"
                     style={{
-                      borderColor: recorder.isRecording ? '#ff4d5e' : ACCENT,
-                      backgroundColor: recorder.isRecording ? '#ff4d5e22' : `${ACCENT}1a`,
+                      borderColor: recorder.isRecording ? colors.accent.blood : ACCENT,
+                      backgroundColor: recorder.isRecording ? `${colors.accent.blood}22` : `${ACCENT}1a`,
                     }}
                   >
                     {recorder.isRecording ? (
-                      <Square color="#ff4d5e" size={14} fill="#ff4d5e" />
+                      <Square color={colors.accent.blood} size={14} fill={colors.accent.blood} />
                     ) : (
                       <Mic color={ACCENT} size={16} />
                     )}
                   </Pressable>
                   <View className="flex-1">
                     {recorder.isRecording ? (
-                      <Mono style={{ color: '#ff4d5e' }}>
+                      <Mono style={{ color: colors.accent.blood }}>
                         RECORDING · {fmtClock(recorder.durationMillis)}
                       </Mono>
                     ) : voiceNote ? (
@@ -222,9 +223,10 @@ export default function JournalScreen() {
             ) : null}
           </Panel>
 
-          <View className="border-line mt-6 mb-2 flex-row items-center justify-between border-b pb-2">
-            <Mono>THIS WEEK</Mono>
-            <Mono>{weekEntries.length} ENTRIES</Mono>
+          <View className="border-line mt-6 mb-2 border-b pb-2">
+            <Mono>
+              THIS WEEK · {weekEntries.length} ENTR{weekEntries.length === 1 ? 'Y' : 'IES'}
+            </Mono>
           </View>
         </View>
 
@@ -281,11 +283,11 @@ function EntryCard({ entry }: { entry: JournalEntry }) {
         <View className="flex-row items-center gap-2">
           {entry.modality === 'voice' ? (
             <View className="flex-row items-center gap-1">
-              <Mic color="#8a90a6" size={9} />
+              <Mic color={colors.text.tertiary} size={9} />
               <Mono>{entry.voiceDurationS ? `${entry.voiceDurationS}s` : 'VOICE'}</Mono>
             </View>
           ) : null}
-          <Mono>{format(new Date(entry.createdAt), 'h:mm a').toLowerCase()}</Mono>
+          <Mono>{format(new Date(entry.createdAt), 'h:mm a').toUpperCase()}</Mono>
           {editing ? (
             <>
               <Pressable hitSlop={8} onPress={saveEdit}>
@@ -298,7 +300,7 @@ function EntryCard({ entry }: { entry: JournalEntry }) {
                   setDraft(entry.body);
                 }}
               >
-                <X color="#8a90a6" size={14} />
+                <X color={colors.text.tertiary} size={14} />
               </Pressable>
             </>
           ) : (
@@ -310,10 +312,10 @@ function EntryCard({ entry }: { entry: JournalEntry }) {
                   setEditing(true);
                 }}
               >
-                <Pencil color="#8a90a6" size={13} />
+                <Pencil color={colors.text.tertiary} size={13} />
               </Pressable>
               <Pressable hitSlop={8} onPress={() => void deleteEntry(entry.id)}>
-                <Trash2 color="#ff6b6b" size={13} />
+                <Trash2 color={colors.accent.blood} size={13} />
               </Pressable>
             </>
           )}
@@ -345,7 +347,7 @@ function EntryCard({ entry }: { entry: JournalEntry }) {
             />
           ))}
           {entry.themes.slice(0, 1).map((theme) => (
-            <Chip key={theme} label={theme} color="#8a90a6" />
+            <Chip key={theme} label={theme} color={colors.text.tertiary} />
           ))}
         </View>
       ) : null}

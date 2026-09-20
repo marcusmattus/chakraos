@@ -19,10 +19,11 @@ import {
 import { hasBackend, supabase } from '@/lib/supabase';
 import { useChakraStore } from '@/lib/store';
 import { enqueueOutbox } from '@/lib/sync/outbox';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey } from '@/lib/types';
 
 const ACCENT = SURFACE_ACCENT.body;
-const MUTE = '#8a90a6';
+const MUTE = colors.text.tertiary;
 
 const MORNING_SCALES: { key: keyof DailyCheckInInput; label: string }[] = [
   { key: 'mood', label: 'Mood' },
@@ -171,9 +172,9 @@ export default function CheckInScreen() {
               key={k}
               onPress={() => setKind(k)}
               className="rounded-full px-3 py-1.5"
-              style={{ backgroundColor: kind === k ? ACCENT : '#141a28' }}
+              style={{ backgroundColor: kind === k ? ACCENT : colors.surface.inset }}
             >
-              <Mono style={{ color: kind === k ? '#0a0e18' : MUTE }}>
+              <Mono style={{ color: kind === k ? colors.surface.deep : MUTE }}>
                 {k === 'morning' ? 'MORNING' : 'EVENING'}
               </Mono>
             </Pressable>
@@ -242,9 +243,9 @@ export default function CheckInScreen() {
           onPress={() => mutation.mutate()}
         >
           {mutation.isPending ? (
-            <ActivityIndicator color="#0a0e18" />
+            <ActivityIndicator color={colors.surface.deep} />
           ) : (
-            <Text className="font-mono-bold" style={{ color: '#0a0e18', fontSize: 13 }}>
+            <Text className="font-mono-bold" style={{ color: colors.surface.deep, fontSize: 13 }}>
               SAVE CHECK-IN
             </Text>
           )}
@@ -275,9 +276,9 @@ function ScaleRow({
             key={n}
             onPress={() => onChange(n)}
             className="h-8 flex-1 items-center justify-center rounded-md"
-            style={{ backgroundColor: n <= value ? ACCENT : '#141a28' }}
+            style={{ backgroundColor: n <= value ? ACCENT : colors.surface.inset }}
           >
-            <Text style={{ fontSize: 10, color: n <= value ? '#0a0e18' : MUTE }}>{n}</Text>
+            <Text style={{ fontSize: 10, color: n <= value ? colors.surface.deep : MUTE }}>{n}</Text>
           </Pressable>
         ))}
       </View>
@@ -303,13 +304,13 @@ function TextArea({
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor="#3a4255"
+        placeholderTextColor={colors.text.ghost}
         multiline
         className="bg-panel border-line text-ink min-h-[72px] rounded-2xl border px-4 py-3"
         style={{
           fontFamily: 'Inter_400Regular',
           fontSize: 15,
-          color: '#e9ecf5',
+          color: colors.text.primary,
           textAlignVertical: 'top',
         }}
       />

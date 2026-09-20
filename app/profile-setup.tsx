@@ -17,10 +17,11 @@ import { Text } from 'heroui-native';
 import { Display, Mono, Panel } from '@/components/ui';
 import { CHAKRAS, SURFACE_ACCENT } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { BaselineMood, ChakraKey, ExperienceLevel } from '@/lib/types';
 
 const ACCENT = SURFACE_ACCENT.you;
-const INK = '#e9ecf5';
+const INK = colors.text.primary;
 
 const MOODS: { value: BaselineMood; label: string }[] = [
   { value: 1, label: 'Heavy' },
@@ -152,7 +153,7 @@ export default function ProfileSetupScreen() {
 
       <View className="pt-safe-offset-3 flex-row items-center justify-between px-5">
         <Pressable hitSlop={12} onPress={back} className="flex-row items-center gap-1">
-          <ChevronLeft color="#8a90a6" size={16} />
+          <ChevronLeft color={colors.text.tertiary} size={16} />
           <Mono>BACK</Mono>
         </Pressable>
         <Mono>
@@ -165,7 +166,7 @@ export default function ProfileSetupScreen() {
           <View
             key={stepKey}
             className="h-1 flex-1 rounded-full"
-            style={{ backgroundColor: i <= step ? ACCENT : '#1e2535' }}
+            style={{ backgroundColor: i <= step ? ACCENT : colors.border.muted }}
           />
         ))}
       </View>
@@ -191,7 +192,7 @@ export default function ProfileSetupScreen() {
                 value={name}
                 onChangeText={setName}
                 placeholder="Your name"
-                placeholderTextColor="#3a4255"
+                placeholderTextColor={colors.text.ghost}
                 autoCapitalize="words"
                 className="bg-panel border-line rounded-2xl border px-4 py-3.5"
                 style={{ fontFamily: 'Inter_400Regular', fontSize: 16, color: INK }}
@@ -254,11 +255,11 @@ export default function ProfileSetupScreen() {
                         <View
                           className="h-6 w-6 items-center justify-center rounded-full border"
                           style={{
-                            borderColor: on ? c.color : '#2a3144',
+                            borderColor: on ? c.color : colors.border.muted,
                             backgroundColor: on ? c.color : 'transparent',
                           }}
                         >
-                          {on ? <Check color="#0a0e18" size={14} /> : null}
+                          {on ? <Check color={colors.surface.deep} size={14} /> : null}
                         </View>
                       </Panel>
                     </Pressable>
@@ -295,7 +296,7 @@ export default function ProfileSetupScreen() {
                               key={dot.value}
                               className="h-2 w-2 rounded-full"
                               style={{
-                                backgroundColor: dot.value <= m.value ? ACCENT : '#2a3144',
+                                backgroundColor: dot.value <= m.value ? ACCENT : colors.border.muted,
                                 opacity: on ? 1 : 0.5,
                               }}
                             />
@@ -331,11 +332,11 @@ export default function ProfileSetupScreen() {
                           <View
                             className="h-5 w-5 items-center justify-center rounded-full border"
                             style={{
-                              borderColor: on ? ACCENT : '#2a3144',
+                              borderColor: on ? ACCENT : colors.border.muted,
                               backgroundColor: on ? ACCENT : 'transparent',
                             }}
                           >
-                            {on ? <Check color="#0a0e18" size={12} /> : null}
+                            {on ? <Check color={colors.surface.deep} size={12} /> : null}
                           </View>
                         </View>
                         <Text className="text-mute mt-1" style={{ fontSize: 13 }}>
@@ -359,7 +360,7 @@ export default function ProfileSetupScreen() {
                 value={intention}
                 onChangeText={setIntention}
                 placeholder="e.g. Speak my truth before resentment builds."
-                placeholderTextColor="#3a4255"
+                placeholderTextColor={colors.text.ghost}
                 multiline
                 className="bg-panel border-line rounded-2xl border px-4 py-3.5"
                 style={{
@@ -377,7 +378,7 @@ export default function ProfileSetupScreen() {
           {error ? (
             <Text
               className="mt-4"
-              style={{ color: '#ff6b6b', fontSize: 13, fontFamily: 'Inter_400Regular' }}
+              style={{ color: colors.accent.blood, fontSize: 13, fontFamily: 'Inter_400Regular' }}
             >
               {error}
             </Text>
@@ -392,13 +393,13 @@ export default function ProfileSetupScreen() {
             onPress={next}
           >
             {busy ? (
-              <ActivityIndicator color="#0a0e18" size="small" />
+              <ActivityIndicator color={colors.surface.deep} size="small" />
             ) : (
               <>
-                <Text className="font-mono-bold" style={{ fontSize: 13, color: '#0a0e18' }}>
+                <Text className="font-mono-bold" style={{ fontSize: 13, color: colors.surface.deep }}>
                   {step === TOTAL_STEPS - 1 ? 'COMPLETE PROFILE' : 'CONTINUE'}
                 </Text>
-                <ArrowRight color="#0a0e18" size={16} />
+                <ArrowRight color={colors.surface.deep} size={16} />
               </>
             )}
           </Pressable>
@@ -438,7 +439,7 @@ function DateBox({ label, ...rest }: { label: string } & React.ComponentProps<ty
     <View className="flex-1">
       <TextInput
         placeholder={label}
-        placeholderTextColor="#3a4255"
+        placeholderTextColor={colors.text.ghost}
         keyboardType="number-pad"
         className="bg-panel border-line rounded-2xl border px-4 py-3.5 text-center"
         style={{ fontFamily: 'JetBrainsMono_500Medium', fontSize: 15, color: INK }}

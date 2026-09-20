@@ -9,6 +9,7 @@ import { AuraSigil } from '@/components/AuraSigil';
 import { FadeIn, Mono, Panel, SoftFade, Voice } from '@/components/ui';
 import { SURFACE_ACCENT, CHAKRA_BY_KEY } from '@/lib/chakras';
 import { useChakraStore } from '@/lib/store';
+import { colors } from '@/lib/tokens/colors';
 import type { ChakraKey } from '@/lib/types';
 
 const ACCENT = SURFACE_ACCENT.you;
@@ -77,7 +78,7 @@ export default function YouScreen() {
       <View className="pt-safe px-4">
         <View className="mt-3 flex-row items-center justify-between">
           <View className="flex-1">
-            <Mono className="text-you">PROFILE</Mono>
+            <Mono className="text-mute">PROFILE · LEVEL {level.toString().padStart(2, '0')}</Mono>
             <Text
               className="text-ink mt-1"
               style={{ fontFamily: 'Outfit_600SemiBold', fontSize: 26 }}
@@ -96,28 +97,29 @@ export default function YouScreen() {
               className="rounded-full px-3 py-1.5"
               style={{ backgroundColor: ACCENT }}
             >
-              <Mono style={{ color: '#0a0e18' }}>CHECK-IN</Mono>
+              <Mono style={{ color: colors.surface.deep }}>CHECK-IN</Mono>
             </Pressable>
-            <Pressable hitSlop={10} onPress={() => router.push('/settings')}>
-              <Settings color="#8a90a6" size={20} />
+            <Pressable
+              hitSlop={10}
+              onPress={() => router.push('/settings')}
+              className="border-line h-8 w-8 items-center justify-center rounded-full border"
+            >
+              <Settings color={colors.text.tertiary} size={15} />
             </Pressable>
           </View>
         </View>
       </View>
 
-      <View className="mt-4 items-center">
-        <SoftFade style={{ width: width - 32 }}>
-          <Panel className="items-center py-6">
-            <Mono className="mb-2">AURA SIGIL</Mono>
-            <AuraSigil states={states} size={Math.min(width - 120, 240)} />
-          </Panel>
+      <View className="mt-2 items-center">
+        <SoftFade>
+          <AuraSigil states={states} size={Math.min(width - 174, 220)} />
         </SoftFade>
       </View>
 
       <View className="mt-4 flex-row gap-3 px-4">
-        <StatCard label="XP TOTAL" value={xp.toLocaleString()} accent={ACCENT} />
-        <StatCard label="STREAK" value={`${streak}`} unit="days" accent={ACCENT} />
-        <StatCard label="LEVEL" value={level.toString().padStart(2, '0')} accent={ACCENT} />
+        <StatCard label="XP TOTAL" value={xp.toLocaleString()} />
+        <StatCard label="STREAK" value={`${streak}`} unit="days" />
+        <StatCard label="LEVEL" value={level.toString().padStart(2, '0')} />
       </View>
 
       <View className="mt-4 px-4">
@@ -288,8 +290,11 @@ export default function YouScreen() {
           ) : (
             breakthroughs.map((b, i) => (
               <FadeIn key={b.id} index={i}>
-                <Panel className="flex-row items-center gap-3 p-3">
-                  <View className="h-2 w-2 rounded-full" style={{ backgroundColor: ACCENT }} />
+                <View className="flex-row items-baseline gap-2.5">
+                  <View
+                    className="h-1.5 w-1.5 rounded-full"
+                    style={{ backgroundColor: i === 0 ? ACCENT : colors.border.muted }}
+                  />
                   <Mono className="w-16">
                     {format(new Date(b.occurredAt), 'd MMM').toUpperCase()}
                   </Mono>
@@ -299,7 +304,7 @@ export default function YouScreen() {
                   >
                     {b.label}
                   </Text>
-                </Panel>
+                </View>
               </FadeIn>
             ))
           )}
@@ -309,7 +314,7 @@ export default function YouScreen() {
       <View className="mt-6 px-4">
         <Pressable onPress={onSignOut}>
           <Panel className="flex-row items-center justify-center gap-2 p-4">
-            <LogOut color="#8a90a6" size={15} />
+            <LogOut color={colors.text.tertiary} size={15} />
             <Text className="text-mute font-mono" style={{ fontSize: 12, letterSpacing: 1 }}>
               SIGN OUT
             </Text>
@@ -329,22 +334,12 @@ export default function YouScreen() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  unit,
-  accent,
-}: {
-  label: string;
-  value: string;
-  unit?: string;
-  accent: string;
-}) {
+function StatCard({ label, value, unit }: { label: string; value: string; unit?: string }) {
   return (
     <Panel className="flex-1 p-3">
       <Mono style={{ fontSize: 9 }}>{label}</Mono>
-      <View className="mt-1 flex-row items-baseline gap-1">
-        <Text className="font-mono-bold" style={{ fontSize: 22, color: accent }}>
+      <View className="mt-1.5 flex-row items-baseline gap-1">
+        <Text style={{ fontFamily: 'Outfit_600SemiBold', fontSize: 21, color: colors.text.primary }}>
           {value}
         </Text>
         {unit ? (
@@ -353,6 +348,9 @@ function StatCard({
           </Text>
         ) : null}
       </View>
+      <Text className="text-faint mt-1 font-mono" style={{ fontSize: 9 }}>
+        — — —
+      </Text>
     </Panel>
   );
 }
